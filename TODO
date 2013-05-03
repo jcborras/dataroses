@@ -1,0 +1,6 @@
+- Capped collection creation
+
+- Take away the graph/ url. Use / for general help and /param as graph
+   resource
+
+- JS errors when rendering graphs....

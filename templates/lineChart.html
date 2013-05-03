@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>lineChart</title>
+  <link type="text/css" rel="stylesheet" href="/static/css/nv.d3.css" />
+
+  <!--headscripts-->
+  <!-- <script src="http://code.jquery.com/jquery-latest.min.js"></script>-->
+
+  <!--<script type="text/javascript" src="../static/js/lib/d3.v3.js"></script>-->
+  <script type="text/javascript" src="../static/js/lib/d3.v2.min.js"></script>
+
+  <script type="text/javascript" src="../static/js/lib/cie.js"></script>
+  <script type="text/javascript" src="../static/js/lib/crossfilter.js"></script>
+  <script type="text/javascript" src="../static/js/lib/fisheye.js"></script>
+  <script type="text/javascript" src="../static/js/lib/hive.js"></script>
+  <script type="text/javascript" src="../static/js/lib/horizon.js"></script>
+  <script type="text/javascript" src="../static/js/lib/sankey.js"></script>
+
+  <script type="text/javascript" src="../static/js/nv.d3.min.js"></script>
+  <script type="text/javascript" src="../static/js/tooltip.js"></script> 
+  <script type="text/javascript" src="../static/js/utils.js"></script>
+
+  <script type="text/javascript" src="../static/js/models/legend.js"></script>
+  <script type="text/javascript" src="../static/js/models/axis.js"></script>
+  <script type="text/javascript" src="../static/js/models/scatter.js"></script>
+  <script type="text/javascript" src="../static/js/models/line.js"></script> 
+  <script type="text/javascript" src="../static/js/models/lineChart.js"></script>
+</head>
+<body>
+
+<div id="chart">
+<svg></svg>
+</div>
+
+<script type="text/javascript">
+function sinAndCos() {
+   var sin = [], cos = [];
+   for (var i = 0; i < 10; i++) {
+     sin.push({x: i, y: Math.sin(i/10)});
+     cos.push({x: i, y: 1.5 * Math.cos(i/5)});
+   }
+
+  return [{"values": sin, "key": 'Sine Wave', "color": '#ff7f0e'},
+          {"values": cos, "key": 'Cosine Wave', "color": '#2ca02c'}];
+}
+
+var graphData = sinAndCos() ;
+var graphData = {{ data|safe }} ;
+console.log(graphData);
+
+nv.addGraph(function() {  
+  var chart = nv.models.lineChart();
+  chart.xAxis.axisLabel('XXX').tickFormat(d3.format(',r'));
+  chart.yAxis.axisLabel('YYY').tickFormat(d3.format('.02f'));
+  d3.select('#chart svg').datum(graphData).transition().duration(500).call(chart);
+  nv.utils.windowResize(function() { d3.select('#chart svg').call(chart) });
+  return chart;
+});
+
+
+</script>
+
+This will have some help text.
+</body>
+</html>
