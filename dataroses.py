@@ -22,8 +22,7 @@ MONGO_DBNAME = 'dataroses'
 COLLECTION_NAME = 'roses'
 
 ROOT_URL='/'
-CATCHER_URL = ROOT_URL
-GRAPH_URL = ROOT_URL + 'graph/'
+LINECHART_URL = ROOT_URL + 'lineChart'
 
 app = Flask('DataRoses')
 formatstr = "%(asctime)s %(filename)s:%(lineno)d %(levelname)s %(message)s"
@@ -47,7 +46,7 @@ collection = get_collection(app.logger)
 def BulletChart(x):
     return render_template("TODO")
 
-def SimpleLine(x):
+def simpleLine(x):
     return render_template('home.html')
 
 def lineChart(x):
@@ -56,7 +55,7 @@ def lineChart(x):
     names = x.fieldnames
     cmap = qualitative['Set1'][max(len(names), 3)]
     y = map(lambda n: {'values':[{'x':i, 'y':float(l[i][names[n]])} for i in range(len(l))], 'key':names[n], 'color':html_form(cmap[n])}, range(len(names)))
-    app.logger.debug(y)
+    app.logger.debug(dumps(y, sort_keys=True, indent=None, separators=(',', ': ')))
     return render_template('lineChart.html', data=y)
 
 def Scatter(x):
@@ -72,7 +71,6 @@ def chart_handler_for(s):
         raise Exception("Method %s not implemented" % s)
     return f
 
-
 SYMBOL_SET = ascii_letters+digits
 def random_key():
     return reduce(lambda x,y: x+y, sample(SYMBOL_SET,1))
@@ -81,8 +79,16 @@ def random_key():
 def frontpage():
     return render_template('home.html')
 
+@app.route(ROOT_URL + '<graph_key>', methods=['GET'])
+def frontpage(graph_key):
+    d = collection.find_one({'graph_id':graph_key})
+    if d is None:
+        app.logger.error('%s key not found' % graph_key)
+        return 'boo!: %s' % graph_key, 404
+    return chart_handler_for(d['chart_type'])(d['data'])
+
 ##http://stackoverflow.com/questions/7936572/python-call-a-function-from-string-name
-@app.route(CATCHER_URL + '<chart_type>', methods=['POST'])
+@app.route(ROOT_URL + '<chart_type>', methods=['POST'])
 def catcher(chart_type):
     h = chart_handler_for(chart_type)
     k = random_key()
@@ -90,17 +96,8 @@ def catcher(chart_type):
     d = {'datetime_utc':datetime.now(), 'graph_id':k, 'chart_type':chart_type,
          'data': request.form.keys()[0]}
     collection.insert(d)
-    return str("http://%s:%d%s" % (APP_HOSTNAME, APP_PORT, GRAPH_URL) + k + '\n')
+    return str("http://%s:%d/%s\n" % (APP_HOSTNAME, APP_PORT, k))
     
-
-@app.route(GRAPH_URL + '<graph_key>', methods=['GET'])
-def canvas(graph_key):
-    d = collection.find_one({'graph_id':graph_key})
-    if d is None:
-        app.logger.error('%s key not found' % graph_key)
-        return 'boo!', 404
-    return chart_handler_for(d['chart_type'])(d['data'])
-
 if __name__ == '__main__':
     #app.logger.debug(app.template_folder)
     #app.logger.info(app.static_folder)
