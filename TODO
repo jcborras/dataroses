@@ -1,8 +1,17 @@
+- Do not create DB at startup but nag
+
 - Capped collection creation
 
-- Take away the graph/ url. Use / for general help and /param as graph
-   resource
+- Why does test2.csv generate JS errors when rendering graphs....
 
-- JS errors when rendering graphs....
+- Sort out caching issues (client side particularly; tell nocache in
+   response headers?: "Cache-Control", "Expires", "Pragma: no-cache")
 
-- Do not create DB at startup but nag
+- The content vs. page issue: ideally dataroses does not return a
+   rendered template with full head+body html code but just the svg
+   element plus all js necesary to make it run and a class field
+   defining its id for on the fly CSS formatting. But for testing and
+   standalone issue is handy if it returns a page. (GET parameter
+   ?type=x to the rescue?)
+
+

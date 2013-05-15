@@ -46,9 +46,6 @@ collection = get_collection(app.logger)
 def BulletChart(x):
     return render_template("TODO")
 
-def simpleLine(x):
-    return render_template('home.html')
-
 def lineChart(x):
     x = DictReader(StringIO(x))
     l = list(x)
@@ -58,8 +55,9 @@ def lineChart(x):
     app.logger.debug(dumps(y, sort_keys=True, indent=None, separators=(',', ': ')))
     return render_template('lineChart.html', data=y)
 
-def Scatter(x):
-    return render_template("TODO")
+def lineChartWithFocusGraph(x):
+    return render_template('lineChartWithFocusGraph.html')
+    pass
 
 #http://stackoverflow.com/questions/7936572/python-call-a-function-from-string-name
 def chart_handler_for(s):
