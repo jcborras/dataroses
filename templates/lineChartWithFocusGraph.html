@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>lineChart</title>
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="-1">
+  <link type="text/css" rel="stylesheet" href="/static/css/nv.d3.css" />
+
+  <!--headscripts-->
+  <!-- <script src="http://code.jquery.com/jquery-latest.min.js"></script>-->
+
+  <!--<script type="text/javascript" src="../static/js/lib/d3.v3.js"></script>-->
+  <!-- <script type="text/javascript" src="../static/js/lib/d3.v2.min.js"></script> -->
+  <script type="text/javascript" src="../static/js/lib/d3.v2.js"></script>
+
+  <script type="text/javascript" src="../static/js/lib/cie.js"></script>
+  <script type="text/javascript" src="../static/js/lib/crossfilter.js"></script>
+  <script type="text/javascript" src="../static/js/lib/fisheye.js"></script>
+  <script type="text/javascript" src="../static/js/lib/hive.js"></script>
+  <script type="text/javascript" src="../static/js/lib/horizon.js"></script>
+  <script type="text/javascript" src="../static/js/lib/sankey.js"></script>
+  <script type="text/javascript" src="../static/js/lib/stream_layers.js"></script>
+
+  <!-- <script type="text/javascript" src="../static/js/nv.d3.min.js"></script> -->
+  <script type="text/javascript" src="../static/js/nv.d3.js"></script>
+  <script type="text/javascript" src="../static/js/tooltip.js"></script> 
+  <script type="text/javascript" src="../static/js/utils.js"></script>
+
+  <script type="text/javascript" src="../static/js/models/legend.js"></script>
+  <script type="text/javascript" src="../static/js/models/axis.js"></script>
+  <!-- <script type="text/javascript" src="../static/js/models/scatter.js"></script>-->
+  <script type="text/javascript" src="../static/js/models/line.js"></script> 
+  <script type="text/javascript" src="../static/js/models/lineChart.js"></script>
+  <script type="text/javascript" src="../static/js/models/lineWithFocusChart.js"></script>
+</head>
+<body>
+
+<div id="chart">
+
+<svg style="height:500px"></svg>
+</div>
+
+<script type="text/javascript">
+function testData() {
+  return stream_layers(3,128,.1).map(function(data, i) {
+     return { key: 'Stream' + i, values: data };
+   });
+}
+nv.addGraph(function() {
+  var chart = nv.models.lineWithFocusChart();
+  chart.xAxis.tickFormat(d3.format(',f'));
+  chart.yAxis.tickFormat(d3.format(',.2f'));
+  chart.y2Axis.tickFormat(d3.format(',.2f'));
+  d3.select('#chart svg').datum(testData()).transition().duration(500).call(chart);
+  nv.utils.windowResize(chart.update);
+  return chart;
+});
+
+
+</script>
+
+This will have some help text.
+</body>
+</html>
